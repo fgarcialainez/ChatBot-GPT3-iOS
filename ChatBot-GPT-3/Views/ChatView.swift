@@ -93,23 +93,22 @@ struct ChatView: View {
                     Image(systemName: "ellipsis.circle").imageScale(.large)
                 }
         )
-        .actionSheet(isPresented: $showOptionsActionSheet) {
-            ActionSheet(
-                title: Text(NSLocalizedString("Conversation Options", comment: "")),
-                buttons: [
-                    .default(Text(NSLocalizedString("Share", comment: ""))) {
-                        // Show standard share dialog
-                        shareConversation()
-                    },
-                    .destructive(Text(NSLocalizedString("Restart", comment: ""))) {
-                        // Show confirmation dialog
-                        self.showConfirmationDialog = true
-                    },
-                    .cancel(Text(NSLocalizedString("Cancel", comment: ""))) {
-                        // Do nothing
-                    }
-                ]
-            )
+        .confirmationDialog(
+            NSLocalizedString("Conversation Options", comment: ""),
+            isPresented: $showOptionsActionSheet,
+            titleVisibility: .visible
+        ) {
+            Button(NSLocalizedString("Share", comment: ""), role: .none) {
+                shareConversation()
+            }
+
+            Button(NSLocalizedString("Restart", comment: ""), role: .destructive) {
+                showConfirmationDialog = true
+            }
+
+            Button(NSLocalizedString("Cancel", comment: ""), role: .cancel) {
+                // Do nothing
+            }
         }
         .alert(isPresented: self.$showConfirmationDialog, content: {
             Alert(
